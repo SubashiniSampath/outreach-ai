@@ -1,4 +1,5 @@
 import os
+import streamlit as st
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
@@ -6,14 +7,14 @@ from langchain_core.exceptions import OutputParserException
 from dotenv import load_dotenv
 
 load_dotenv()
-os.getenv("GROQ_API_KEY")
+#os.getenv("GROQ_API_KEY")
 
 class Chain:
     def __init__(self):
         self.llm = ChatGroq(
         temperature=0,
         model_name="llama-3.3-70b-versatile",
-        groq_api_key=os.getenv("GROQ_API_KEY") )
+        groq_api_key=st.secrets["GROQ_API_KEY"] )
 
 
     def extract_jobs(self, cleaned_text):
@@ -45,14 +46,14 @@ class Chain:
             {job_description}
 
             ### INSTRUCTION:
-            You are Achyuth, a business development executive at XYZ Company. XYZ is an AI & Software Consulting company dedicated to facilitating
+            You are Subashini, a business development executive at XYZ Company. XYZ is an AI & Software Consulting company dedicated to facilitating
             the seamless integration of business processes through automated tools. 
             Over our experience, we have empowered numerous enterprises with tailored solutions, fostering scalability, 
             process optimization, cost reduction, and heightened overall efficiency. 
             Your job is to write a cold email to the client regarding the job mentioned above describing the capability of XYZ company
             in fulfilling their needs.
             Also add the most relevant ones from the following links to showcase XYZ's portfolio: {link_list}
-            Remember you are Achyuth, BDE at XYZ. 
+            Remember you are Subashini, BDE at XYZ. 
             Do not provide a preamble.
             ### EMAIL (NO PREAMBLE):
 
@@ -63,4 +64,5 @@ class Chain:
         return res.content
 
 if __name__ == "__main__":
-    print(os.getenv("GROQ_API_KEY"))
+    key = st.secrets["GROQ_API_KEY"]
+    print(f"Key loaded: {key[:6]}...{key[-4:]}")   # only shows first/last few characters
